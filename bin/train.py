@@ -27,9 +27,9 @@ for i in X.columns:
 X.drop(["txt"],axis=1,inplace=True)
 X.fillna(999,inplace=True)
 y = X.loc[:,"target"].copy()
-X.drop(["target"],axis=1)
+X.drop(["target"],axis=1,inplace=True)
 # config
-NFOLDS = 10
+NFOLDS = 5
 folds = KFold(n_splits=NFOLDS)
 params = get_lgb_params()
 
