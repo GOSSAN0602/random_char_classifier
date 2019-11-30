@@ -39,6 +39,15 @@ for i in top45:
         col_name=str(i)+"_"+str(j)+"_"
         X[col_name+"mul"]=X[i]*X[j]
         X[col_name+"div"]=X[i]/X[j]
+del basic_f_imp
+gc.collect()
+
+# select feature
+f_imp=pd.read_csv("feature_importances.csv")
+use_col=f_imp["feature"].values[:1000].tolist()
+X=X.loc[:,use_col]
+import pdb;pdb.set_trace()
+
 #del_list=["num_of_word_0","num_of_word_1","num_of_word_3","num_of_word_3"]
 #X.drop(del_list,axis=1,inplace=True)
 
