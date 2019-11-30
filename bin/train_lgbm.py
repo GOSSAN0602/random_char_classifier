@@ -38,8 +38,8 @@ for i in top45:
         col_name=str(i)+"_"+str(j)+"_"
         X[col_name+"mul"]=X[i]*X[j]
         X[col_name+"div"]=X[i]/X[j]
-del_list=["num_of_word_0","num_of_word_1","num_of_word_3","num_of_word_3"]
-X.drop(del_list,axis=1,inplace=True)
+#del_list=["num_of_word_0","num_of_word_1","num_of_word_3","num_of_word_3"]
+#X.drop(del_list,axis=1,inplace=True)
 
 # config
 NFOLDS = 5
@@ -85,9 +85,9 @@ print(f"Out of folds AUC = {roc_auc_score(y, y_oof)}")
 # feature importance fig
 feature_importances['average'] = feature_importances[[f'fold_{fold_n + 1}' for fold_n in range(folds.n_splits)]].mean(axis=1)
 feature_importances.sort_values(by='average', ascending=False, inplace=True)
-plt.figure(figsize=(16, 16))
+plt.figure(figsize=(24, 16))
 sns.barplot(data=feature_importances.sort_values(by='average', ascending=False).head(50), x='average', y='feature');
-plt.title('50 TOP feature importance over {} folds average'.format(folds.n_splits))
+plt.title(''.format(score))
 plt.savefig("feature_importance.png")
 
 # save feature importances

@@ -14,6 +14,6 @@ def get_lgb_params():
           'reg_alpha': 0.3899927210061127,
           'reg_lambda': 0.6485237330340494,
           'random_state': 47,
-          'feature_fraction': 0.8,
+          'feature_fraction': 0.7,
          }
     return params
