@@ -29,6 +29,17 @@ X.drop(["txt"],axis=1,inplace=True)
 X.fillna(np.nan,inplace=True)
 y = X.loc[:,"target"].copy()
 X.drop(["target"],axis=1,inplace=True)
+
+# make feature
+basic_f_imp = pd.read_csv("./basic_feature_importances.csv")
+import pdb;pdb.set_trace()
+top45 = basic_f_imp["feature"][:45].values.tolist()
+for i in top45:
+    for j in top45:
+        col_name=str(i)+"_"+str(j)+"_"
+        X[col_name+"mul"]=X[i]*X[j]
+        X[col_name+"div"]=X[i]/X[j]
+
 # config
 NFOLDS = 5
 folds = KFold(n_splits=NFOLDS)
@@ -72,8 +83,11 @@ print(f"Out of folds AUC = {roc_auc_score(y, y_oof)}")
 
 # feature importance fig
 feature_importances['average'] = feature_importances[[f'fold_{fold_n + 1}' for fold_n in range(folds.n_splits)]].mean(axis=1)
-feature_importances.to_csv('feature_importances.csv')
+feature_importances.sort_values(by='average', ascending=False, inplace=True)
 plt.figure(figsize=(16, 16))
 sns.barplot(data=feature_importances.sort_values(by='average', ascending=False).head(50), x='average', y='feature');
 plt.title('50 TOP feature importance over {} folds average'.format(folds.n_splits))
 plt.savefig("feature_importance.png")
+
+# save feature importances
+feature_importances.to_csv("./feature_importances.csv")
