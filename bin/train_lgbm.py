@@ -33,6 +33,7 @@ X.drop(["target"],axis=1,inplace=True)
 # make feature
 basic_f_imp = pd.read_csv("./basic_feature_importances.csv")
 top45 = basic_f_imp["feature"][:45].values.tolist()
+top45.extend(["cnt_X","cnt_Z"])
 for i in top45:
     for j in top45:
         col_name=str(i)+"_"+str(j)+"_"
@@ -87,7 +88,7 @@ feature_importances['average'] = feature_importances[[f'fold_{fold_n + 1}' for f
 feature_importances.sort_values(by='average', ascending=False, inplace=True)
 plt.figure(figsize=(24, 16))
 sns.barplot(data=feature_importances.sort_values(by='average', ascending=False).head(50), x='average', y='feature');
-plt.title(''.format(score))
+plt.title(str(score))
 plt.savefig("feature_importance.png")
 
 # save feature importances
