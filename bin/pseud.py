@@ -18,17 +18,20 @@ sns.set()
 # Load Data
 data_folder = '../dataset/tmp/'
 X = pd.read_csv(data_folder+'training-small-0.csv')
-#X_test = pd.read_hdf(data_folder+'test.hdf', "df", engine='python')
-for i in X.columns:
-    X.loc[X[i]=="X",i]=1
-    X.loc[X[i]=="Y",i]=2
-    X.loc[X[i]=="Z",i]=3
-
-    
 X.drop(["txt"],axis=1,inplace=True)
 X.fillna(np.nan,inplace=True)
 y = X.loc[:,"target"].copy()
 X.drop(["target"],axis=1,inplace=True)
+X_test = pd.read_csv(data_folder+'test-small-0.csv')
+for i in X.columns:
+    X.loc[X[i]=="X",i]=1
+    X.loc[X[i]=="Y",i]=2
+    X.loc[X[i]=="Z",i]=3
+    X_test.loc[X_test[i]=="X",i]=1
+    X_test.loc[X_test[i]=="Y",i]=2
+    X_test.loc[X_test[i]=="Z",i]=3
+
+    
 
 # make feature
 basic_f_imp = pd.read_csv("./basic_feature_importances.csv")
@@ -39,19 +42,22 @@ for i in top45:
         col_name=str(i)+"_"+str(j)+"_"
         X[col_name+"mul"]=X[i]*X[j]
         X[col_name+"div"]=X[i]/X[j]
+        X_test[col_name+"mul"]=X_test[i]*X_test[j]
+        X_test[col_name+"div"]=X_test[i]/X_test[j]
+        
 del basic_f_imp
 gc.collect()
 
-
 # select feature
-
+"""
 f_imp=pd.read_csv("feature_importances.csv")
 use_col=f_imp["feature"].values[:500].tolist()
 X=X.loc[:,use_col]
-
+X_test=X_test.loc[:,use_col]
+"""
 del_list=["num_of_word_0","num_of_word_1","num_of_word_2","num_of_word_3"]
 #del_list=["num_of_word_0_num_of_word_0_mul","num_of_word_1_num_of_word_1_mul"]
-#X.drop(del_list,axis=1,inplace=True)
+X.drop(del_list,axis=1,inplace=True)
 
 # config
 NFOLDS = 5
@@ -60,7 +66,7 @@ params = get_lgb_params()
 
 columns = X.columns
 splits = folds.split(X, y)
-#y_preds = np.zeros(X_test.shape[0])
+y_preds = np.zeros(X_test.shape[0])
 y_oof = np.zeros(X.shape[0])
 score = 0
 
@@ -82,14 +88,14 @@ for fold_n, (train_index, valid_index) in enumerate(splits):
     print(f"Fold {fold_n + 1} | AUC: {roc_auc_score(y_valid, y_pred_valid)}")
 
     score += roc_auc_score(y_valid, y_pred_valid) / NFOLDS
- #   y_preds += clf.predict(X_test) / NFOLDS
+    y_preds += clf.predict(X_test) / NFOLDS
 
     del X_train, X_valid, y_train, y_valid
     gc.collect()
 
 print(f"\nMean AUC = {score}")
 print(f"Out of folds AUC = {roc_auc_score(y, y_oof)}")
-
+import pdb;pdb.set_trace()
 # make submission file
 #sub['isFraud'] = y_preds
 #sub.to_csv("submission.csv", index=False)
@@ -103,4 +109,4 @@ plt.title(str(score))
 plt.savefig("feature_importance.png")
 
 # save feature importances
-#feature_importances.to_csv("./feature_importances.csv")
+feature_importances.to_csv("./feature_importances.csv")
