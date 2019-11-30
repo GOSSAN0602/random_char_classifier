@@ -10,8 +10,11 @@ import random
 sys.path.append('./')
 #from libs.feature_select import adversarial_del_list
 
+
 data_dir = '../dataset/tmp/'
 train = pd.read_csv(data_dir+"training-small-0.csv")
+
+
 train.drop(["target","txt"],axis=1,inplace=True)
 for i in train.columns:
     train.loc[train[i]=="X", i]=1
@@ -28,6 +31,14 @@ random.seed(0)
 s_idx=list(range(test.shape[0]))
 random.shuffle(s_idx)
 test = test.iloc[s_idx[:train.shape[0]]]
+
+
+# del top features
+adv_imp=pd.read_csv("./adv/feature_imp.csv")
+del_list=list(adv_imp['Feature'].values[:80])
+train=train.drop(del_list,axis=1)
+test=test.drop(del_list,axis=1)
+
 #del_list=[]
 #del_list=adversarial_del_list(420)
 #train.drop(del_list, inplace=True, axis=1)
@@ -44,7 +55,7 @@ del train['target'], test
 train, val, t_train, t_val = train_test_split(train, target, test_size=0.2, random_state=42)
 
 param = {'num_leaves': 200,
-         'min_data_in_leaf': 60, 
+         'min_data_in_leaf': 100, 
          'objective':'binary',
          'max_depth': -1,
          'learning_rate': 0.1,
@@ -70,6 +81,6 @@ plt.figure(figsize=(20, 10))
 sns.barplot(x="Value", y="Feature", data=feature_imp.sort_values(by="Value", ascending=False).head(30))
 plt.title('LightGBM Features (avg over folds)')
 plt.tight_layout()
-plt.savefig('./adv_lgbm_importances-01.png')
+plt.savefig('./adv/adv_lgbm_importances-01.png')
 #feature_imp = feature_imp.sort_values(by="Value", ascending=False)
-#feature_imp.to_csv('feature_imp.csv',index=False)
+#feature_imp.to_csv('./adv/feature_imp.csv',index=False)
