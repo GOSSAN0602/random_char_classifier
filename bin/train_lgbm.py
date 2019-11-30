@@ -16,8 +16,8 @@ import seaborn as sns
 sns.set()
 
 # Load Data
-data_folder = '../dataset/basic/'
-X = pd.read_csv(data_folder+'train_df.csv')
+data_folder = '../dataset/tmp/'
+X = pd.read_csv(data_folder+'training-small-0.csv')
 #X_test = pd.read_hdf(data_folder+'test.hdf', "df", engine='python')
 for i in X.columns:
     X.loc[X[i]=="X",i]=1
@@ -25,7 +25,7 @@ for i in X.columns:
     X.loc[X[i]=="Z",i]=3
     
 X.drop(["txt"],axis=1,inplace=True)
-X.fillna(999,inplace=True)
+X.fillna(np.nan,inplace=True)
 y = X.loc[:,"target"].copy()
 X.drop(["target"],axis=1,inplace=True)
 # config
