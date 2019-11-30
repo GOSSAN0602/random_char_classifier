@@ -44,7 +44,7 @@ gc.collect()
 
 # select feature
 f_imp=pd.read_csv("feature_importances.csv")
-use_col=f_imp["feature"].values[:1000].tolist()
+use_col=f_imp["feature"].values[:500].tolist()
 X=X.loc[:,use_col]
 import pdb;pdb.set_trace()
 
