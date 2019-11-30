@@ -23,7 +23,6 @@ for i in X.columns:
     X.loc[X[i]=="X",i]=1
     X.loc[X[i]=="Y",i]=2
     X.loc[X[i]=="Z",i]=3
-X["1*3"]=X["num_of_word_1"]*X["num_of_word_2"]
 
     
 X.drop(["txt"],axis=1,inplace=True)
