@@ -51,7 +51,7 @@ X=X.loc[:,use_col]
 
 del_list=["num_of_word_0","num_of_word_1","num_of_word_2","num_of_word_3"]
 #del_list=["num_of_word_0_num_of_word_0_mul","num_of_word_1_num_of_word_1_mul"]
-#X.drop(del_list,axis=1,inplace=True)
+X.drop(del_list,axis=1,inplace=True)
 
 # config
 NFOLDS = 5
