@@ -35,10 +35,11 @@ test = test.iloc[s_idx[:train.shape[0]]]
 
 # del top features
 adv_imp=pd.read_csv("./adv/feature_imp.csv")
-del_list=list(adv_imp['Feature'].values[:80])
+del_list=list(adv_imp['Feature'].values[:280])
 train=train.drop(del_list,axis=1)
 test=test.drop(del_list,axis=1)
 
+print("**************use col num*******************: ",train.shape[1])
 #del_list=[]
 #del_list=adversarial_del_list(420)
 #train.drop(del_list, inplace=True, axis=1)
