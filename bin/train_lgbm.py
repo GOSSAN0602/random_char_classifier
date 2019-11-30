@@ -32,13 +32,14 @@ X.drop(["target"],axis=1,inplace=True)
 
 # make feature
 basic_f_imp = pd.read_csv("./basic_feature_importances.csv")
-import pdb;pdb.set_trace()
 top45 = basic_f_imp["feature"][:45].values.tolist()
 for i in top45:
     for j in top45:
         col_name=str(i)+"_"+str(j)+"_"
         X[col_name+"mul"]=X[i]*X[j]
         X[col_name+"div"]=X[i]/X[j]
+del_list=["num_of_word_0","num_of_word_1","num_of_word_3","num_of_word_3"]
+X.drop(del_list,axis=1,inplace=True)
 
 # config
 NFOLDS = 5
